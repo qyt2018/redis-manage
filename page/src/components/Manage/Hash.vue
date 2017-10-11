@@ -40,7 +40,7 @@
                         </table>
                     </div>
                     <div class="ivu-table-body h360">
-                        <table cellspacing="0" cellpadding="0" border="0" style="width: 1450px;">
+                        <table cellspacing="0" cellpadding="0" border="0" style="width: 100%;">
                             <tbody class="ivu-table-tbody">
                                 <tr class="ivu-table-row ivu-table-row-hover" v-for="(item, index) in values">
                                     <td class="" @click.prevent="show(item.idx)"><div class="ivu-table-cell"><span>{{ item.idx }}</span></div></td>
@@ -175,7 +175,7 @@ export default {
       }).done((resp) => {
         if (resp.err === '0') {
           if (!this.key) {
-            this.$emit('del_ikey', this.ikey)
+            this.$emit('listenHash', this.ikey)
           } else {
             let data = {}
             let value = JSON.parse(this.value)

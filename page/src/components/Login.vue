@@ -27,8 +27,8 @@ export default {
     return {
       curHost: 0,
       name: 'REDIS_ADMIN',
-      host: '192.168.143.56',
-      port: 6403,
+      host: '192.168.33.138',
+      port: 6379,
       auth: '',
       msg: '',
       win: 1,

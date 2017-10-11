@@ -36,6 +36,16 @@ func get(k string, client net.Conn) ([]string, error){
 	return data, err
 }
 
+
+/*
+    SET key value [EX seconds] [PX milliseconds] [NX|XX]
+*/
+func set(k string, value string, client net.Conn) (string, error){
+	cmd := fmt.Sprintf("SET %s %s", k, value)
+	data, err := exec(cmd, client)
+	return data[0], err
+}
+
 /*
 	hget xxx
 */
@@ -138,7 +148,7 @@ func lRange(k string, s int, e int, client net.Conn) ([]string, error){
 /*
 	LPUSH key value [value ...]
 */
-func lPush(k string, value string, client net.Conn){
+func lPush(k string, value string, client net.Conn) (int, error) {
 	cmd := fmt.Sprintf("LPUSH %s %s", k, value)
 	r, err := exec(cmd, client)
 	if err != nil {
@@ -187,6 +197,62 @@ func lDel(k string, index int, client net.Conn) (int, error){
 }
 
 /*
+    SMEMBERS key
+*/
+func Smembers(k string, client net.Conn) ([]string, error){
+	cmd := fmt.Sprintf("SMEMBERS %s", k)
+	data, err := exec(cmd, client)
+	return data, err
+}
+
+/*
+    SADD key member [member ...]
+*/
+func sAdd(k string, value string, client net.Conn) (int, error) {
+	cmd := fmt.Sprintf("SADD %s %s", k, value)
+	r, err := exec(cmd, client)
+	if err != nil {
+		return 0, err
+	}
+	d := 0
+	d, err = strconv.Atoi(r[0])
+	if err != nil {
+		return d, err
+	}
+	return d, nil
+}
+
+/*
+    SREM key member [member ...]
+*/
+func sRem(k string, value string, client net.Conn) (int, error) {
+    cmd := fmt.Sprintf("SREM %s %s", k, value)
+    r, err := exec(cmd, client)
+    if err != nil {
+        return 0, err
+    }
+    d := 0
+    d, err = strconv.Atoi(r[0])
+    if err != nil {
+        return d, err
+    }
+    return d, nil
+}
+
+/*
+    Smod ...
+    SREM key member [member ...]
+    SADD key member [member ...]
+*/
+func sMod(k string, old_value string, value string, client net.Conn) (int, error) {
+    _, err := sRem(k, old_value, client)
+    if err != nil {
+        return 0, err
+    }
+    return sAdd(k, value, client)
+}
+
+/*
 	value
 */
 func getValue(k string, client net.Conn) ([]string, error){
@@ -208,7 +274,9 @@ func getValue(k string, client net.Conn) ([]string, error){
 			return data, err
 		}
 		return lRange(k, 0, len, client)
-	case "string","set","zset":
+	case "set":
+        return Smembers(k, client)
+	case "string","zset":
 		return get(k, client)
 	}
 	return data, nil

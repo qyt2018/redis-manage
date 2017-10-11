@@ -39,7 +39,7 @@
                         </table>
                     </div>
                     <div class="ivu-table-body h360">
-                        <table cellspacing="0" cellpadding="0" border="0" style="width: 1450px;">
+                        <table cellspacing="0" cellpadding="0" border="0" style="width: 100%;">
                             <tbody class="ivu-table-tbody">
                                 <tr class="ivu-table-row ivu-table-row-hover" v-for="(item, index) in value">
                                     <td class="" @click.prevent="show(index)"><div class="ivu-table-cell"><span>{{ index + 1 }}</span></div></td>
@@ -53,7 +53,6 @@
         </div>
         <div class="layout-content-main mt20">
             <template>
-                <Input v-model="key" placeholder="请输入..." style="width: 100%"><span slot="prepend">键</span></Input>
                 <Input v-model="val" placeholder="请输入..." style="width: 100%; margin-top:10px;"><span slot="prepend">值</span></Input>
             </template>
         </div>
@@ -111,12 +110,14 @@ export default {
       if (this.index === null) {
         this.value.push(this.val)
         this.index = this.value.length - 1
+      } else {
+        this.value.splice(this.index, 1, this.val)
       }
       return
     },
     del: function () {
       let msg = ''
-      if (!this.key) {
+      if (!this.index && this.index !== 0) {
         msg = '您确认要删除' + this.ikey + '的所有值吗？'
       } else {
         msg = '您确认要删除' + this.val + '吗？'
@@ -137,8 +138,8 @@ export default {
         url: 'http://' + document.location.host
       }).done((resp) => {
         if (resp.err === '0') {
-          if (!this.key) {
-            this.$emit('del_ikey', this.ikey)
+          if (!this.index && this.index !== 0) {
+            this.$emit('listenList', this.ikey)
           } else {
             this.value.splice(this.index, 1)
             this.val = null

@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/websocket"
 	"net/http"
 	"text/template"
+	"strconv"
 )
 
 var (
@@ -229,7 +230,8 @@ func save(w http.ResponseWriter, r *http.Request) {
 		if index == "" || index == "null" {
 			_, err = lPush(ikey, val, redisClient)
 		} else {
-			_, err = lSet(ikey, index, val, redisClient)
+		    idx, _ := strconv.Atoi(index)
+			_, err = lSet(ikey, idx, val, redisClient)
 		}
 		if err != nil {
 			data["err"] = "1"
@@ -242,6 +244,41 @@ func save(w http.ResponseWriter, r *http.Request) {
 			log.Error("json code:" + errj.Error())
 		}
 		io.WriteString(w, string(jsonData))
+	case "set":
+        index := r.Form["index"][0]
+        val := r.Form["val"][0]
+        var err error
+        if index == "" || index == "null" {
+            _, err = sAdd(ikey, val, redisClient)
+        } else {
+            old_val := r.Form["old_val"][0]
+            _, err = sMod(ikey, old_val, val, redisClient)
+        }
+        if err != nil {
+            data["err"] = "1"
+            data["msg"] = err.Error()
+        } else {
+            data["err"] = "0"
+        }
+        jsonData, errj := json.Marshal(data)
+        if errj != nil {
+            log.Error("json code:" + errj.Error())
+        }
+        io.WriteString(w, string(jsonData))
+    case "string":
+        val := r.Form["val"][0]
+        _, err := set(ikey, val, redisClient)
+        if err != nil {
+            data["err"] = "1"
+            data["msg"] = err.Error()
+        } else {
+            data["err"] = "0"
+        }
+        jsonData, errj := json.Marshal(data)
+        if errj != nil {
+            log.Error("json code:" + errj.Error())
+        }
+        io.WriteString(w, string(jsonData))
 	}
 }
 
@@ -284,7 +321,8 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		if index == "" || index == "null" {
 			_, err = del(ikey, redisClient)
 		} else {
-			_, err = lDel(ikey, key, redisClient)
+		    idx, _ := strconv.Atoi(index)
+			_, err = lDel(ikey, idx, redisClient)
 		}
 		if err != nil {
 			data["err"] = "1"
@@ -297,5 +335,38 @@ func delete(w http.ResponseWriter, r *http.Request) {
 			log.Error("json code:" + errj.Error())
 		}
 		io.WriteString(w, string(jsonData))
+    case "set":
+        val := r.Form["val"][0]
+        var err error
+        if val == "" || val == "null" {
+            _, err = del(ikey, redisClient)
+        } else {
+            _, err = sRem(ikey, val, redisClient)
+        }
+        if err != nil {
+            data["err"] = "1"
+            data["msg"] = err.Error()
+        } else {
+            data["err"] = "0"
+        }
+        jsonData, errj := json.Marshal(data)
+        if errj != nil {
+            log.Error("json code:" + errj.Error())
+        }
+        io.WriteString(w, string(jsonData))
+    case "string":
+        _, err := del(ikey, redisClient)
+        if err != nil {
+            data["err"] = "1"
+            data["msg"] = err.Error()
+        } else {
+            data["err"] = "0"
+        }
+        jsonData, errj := json.Marshal(data)
+        if errj != nil {
+            log.Error("json code:" + errj.Error())
+        }
+        io.WriteString(w, string(jsonData))
+
 	}
 }

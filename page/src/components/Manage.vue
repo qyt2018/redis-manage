@@ -69,8 +69,10 @@
                     <h5>{{'类型：'+type}}</h5>
                 </div>
             </div>
-            <hash :value="value" :ikey="ikey" v-if="type=='hash'" v-on="del_ikey"></hash>
-            <list :value="value" :ikey="ikey" v-if="type=='list'" v-on="del_ikey"></list>
+            <hash :value="value" :ikey="ikey" v-if="type=='hash'" v-on:listenHash="del_ikey"></hash>
+            <list :value="value" :ikey="ikey" v-if="type=='list'" v-on:listenList="del_ikey"></list>
+            <set :value="value" :ikey="ikey" v-if="type=='set'" v-on:listenSet="del_ikey"></set>
+            <string :value="value" :ikey="ikey" v-if="type=='string'" v-on:listenString="del_ikey"></string>
         </div>
       </Col>
     </Row>
@@ -81,11 +83,15 @@
   import $ from 'jquery'
   import Hash from './Manage/Hash'
   import List from './Manage/List'
+  import Set from './Manage/Set'
+  import String from './Manage/String'
   export default {
     name: 'manage',
     components: {
       Hash,
-      List
+      List,
+      Set,
+      String
     },
     data () {
       return {
@@ -109,7 +115,7 @@
             this.show_detail = 1
             this.type = resp.type
             let values = JSON.parse(resp.value)
-            if (this.type === 'hash') {
+            if (this.type === 'hash' || this.type === 'string') {
               this.value = values[0]
             } else {
               this.value = values
