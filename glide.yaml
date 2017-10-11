@@ -1,0 +1,6 @@
+package: ssh/webssh
+import:
+- package: github.com/Sirupsen/logrus
+  version: ~1.0.3
+- package: golang.org/x/crypto/ssh
+- package: github.com/gorilla/websocket
