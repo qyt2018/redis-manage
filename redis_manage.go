@@ -210,7 +210,7 @@ func save(w http.ResponseWriter, r *http.Request) {
 	case "hash":
 		key := r.Form["key"][0]
 		val := r.Form["val"][0]
-		d, err := hSet(ikey, key, val, redisClient)
+		_, err := hSet(ikey, key, val, redisClient)
 		if err != nil {
 			data["err"] = "1"
 			data["msg"] = err.Error()
@@ -225,8 +225,12 @@ func save(w http.ResponseWriter, r *http.Request) {
 	case "list":
 		index := r.Form["index"][0]
 		val := r.Form["val"][0]
-
-		d, err := hSet(ikey, key, val, redisClient)
+		var err error
+		if index == "" || index == "null" {
+			_, err = lPush(ikey, val, redisClient)
+		} else {
+			_, err = lSet(ikey, index, val, redisClient)
+		}
 		if err != nil {
 			data["err"] = "1"
 			data["msg"] = err.Error()
@@ -262,6 +266,25 @@ func delete(w http.ResponseWriter, r *http.Request) {
 			_, err = del(ikey, redisClient)
 		} else {
 			_, err = hDel(ikey, key, redisClient)
+		}
+		if err != nil {
+			data["err"] = "1"
+			data["msg"] = err.Error()
+		} else {
+			data["err"] = "0"
+		}
+		jsonData, errj := json.Marshal(data)
+		if errj != nil {
+			log.Error("json code:" + errj.Error())
+		}
+		io.WriteString(w, string(jsonData))
+	case "list":
+		index := r.Form["index"][0]
+		var err error
+		if index == "" || index == "null" {
+			_, err = del(ikey, redisClient)
+		} else {
+			_, err = lDel(ikey, key, redisClient)
 		}
 		if err != nil {
 			data["err"] = "1"

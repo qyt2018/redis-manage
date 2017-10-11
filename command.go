@@ -6,6 +6,8 @@ import(
 	"net"
 	"encoding/json"
 	"strconv"
+	"time"
+	"crypto/md5"
 )
 
 /*
@@ -153,8 +155,35 @@ func lPush(k string, value string, client net.Conn){
 /*
 	LSET key index value
 */
-func lSet(k string, index int, value string, client net.Conn) {
-	
+func lSet(k string, index int, value string, client net.Conn) (string, error){
+	cmd := fmt.Sprintf("LSET %s %d %s", k, index, value)
+	data, err := exec(cmd, client)
+	return data[0], err
+}
+
+/*
+	LSET key index value
+	LREM key count value
+*/
+func lDel(k string, index int, client net.Conn) (int, error){
+	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
+	h := md5.Sum([]byte(timestamp))
+	value := fmt.Sprintf("%x", h)
+	_, err := lSet(k, index, value, client)
+	if err != nil {
+		return 0, err
+	}
+	cmd := fmt.Sprintf("LREM %s %d %s", k, 1, value)
+	r, err := exec(cmd, client)
+	if err != nil {
+		return 0, err
+	}
+	d := 0
+	d, err = strconv.Atoi(r[0])
+	if err != nil {
+		return d, err
+	}
+	return d, nil
 }
 
 /*
