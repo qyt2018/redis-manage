@@ -63,7 +63,7 @@
         }
         this.conn.onmessage = function (event) {
           data = {}
-          data.content = event.data.split('\n')
+          data.content = JSON.parse(event.data)
           data.type = 'content'
           _this.msg.push(data)
           _this.scrollTop()

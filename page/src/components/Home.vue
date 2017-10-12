@@ -79,6 +79,7 @@
   import Command from './Command'
 
   export default {
+    name: 'home',
     components: {
       Manage,
       Command
