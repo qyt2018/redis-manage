@@ -4,7 +4,7 @@
     <ul>
       <li><label>打开：</label><select v-model="curHost" @change="selectHost" class="in login_open">
             <option :value="0">新建</option>
-            <option v-for="(value, key) in conf" :value="value.host">{{ value.host }}</option>
+            <option v-for="(value, key) in conf" :value="key">{{ value.name }}</option>
         </select>
       </li>
       <li><label>名称：</label><input class="in" type="text" v-model="name" /></li>
@@ -16,7 +16,6 @@
       <li class="login_msg">{{ msg }}</li>
     </ul>
   </div>
-
 </template>
 
 <script>
@@ -64,6 +63,7 @@ export default {
         return
       }
       var config = this.conf[this.curHost]
+      console.log(this.curHost, config)
       this.host = config['host']
       this.port = config['port']
       this.name = config['name']

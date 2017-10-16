@@ -47,9 +47,12 @@
   .height15{
     height:15px;
   }
+  .clear{
+    clear:both;
+  }
 </style>
 <template>
-  <div class="manage" v-bind:data="mode">
+  <div class="manage clear" v-bind:data="mode">
     <Row>
       <Col span="5">
       <Menu active-name="1-2" width="auto" :open-names="['1']">
@@ -58,7 +61,7 @@
             <Icon type="ios-navigate"></Icon>
             KEYS
           </template>
-          <MenuItem v-for="(item, index) in keys" :name="'1-'+index" @click.native="getValue(item)">{{item}}</MenuItem>
+          <MenuItem v-for="(item, index) in keys" :name="'1-'+index" @click.native="getValue(item)" :title="item">{{item.length > 45 ? item.substring(0,40)+'...' : item}}</MenuItem>
         </Submenu>
       </Menu>
       </Col>

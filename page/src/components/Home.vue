@@ -53,11 +53,11 @@
     <Menu mode="horizontal" theme="dark" active-name="1">
       <div class="layout-logo"><a href="javascript:void(0);" @click.prevent="logout">退出登录</a></div>
       <div class="layout-nav">
-        <MenuItem @click.prevent="getMode(1)">
+        <MenuItem @click.native="getMode(1)">
           <Icon type="ios-eye"></Icon>
           视图模式
         </MenuItem>
-        <MenuItem @click.prevent="getMode(2)">
+        <MenuItem @click.native="getMode(2)">
           <Icon type="code-working"></Icon>
           命令模式
         </MenuItem>
@@ -77,6 +77,8 @@
 <script>
   import Manage from './Manage'
   import Command from './Command'
+  import $Msg from 'iview/src/components/message'
+  import $ from 'jquery'
 
   export default {
     name: 'home',
@@ -95,8 +97,17 @@
         this.mode = data
       },
       logout: function () {
-        this.win = 1
-        this.$emit('logout-return', this.win)
+        $.ajax({
+          type: 'post',
+          dataType: 'json',
+          data: {action: 'logout'},
+          url: 'http://' + document.location.host
+        }).done((resp) => {
+          this.win = 1
+          this.$emit('logout-return', this.win)
+        }).fail((resp) => {
+          $Msg.error('操作失败：服务器错误')
+        })
       }
     }
   }

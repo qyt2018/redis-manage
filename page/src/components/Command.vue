@@ -98,18 +98,20 @@
   .command{
     width: 100%;
     height: 100%;
-    background: #000000;
-    padding-left: 0px;
+    background: #fff;
+    padding-left: 10px;
+    font-size:14px;
+    line-height:20px;
   }
   .command .show_command{
-    background: #000000;
+    background: #fff;
     width: 100%;
-    color: #fff;
+    color: #6540BE;
   }
   .command .input_command{
     width: 100%;
-    background: #000;
-    color: #fff;
+    background: #fff;
+    color: #3AB35B;
     padding-left: 0;
     padding-right: 0;
     padding-bottom: 10px;
@@ -117,13 +119,13 @@
   .command .input_command input{
     width: 80%;
     border: none;
-    background: #000;
-    color:#fff;
+    background: #fff;
+    color:#3AB35B;
     padding-left: 5px;
     outline:none;
   }
   .command .show_command .command_text{
-    color: #ccc;
+    color: #000;
   }
   p {
     margin:0px;

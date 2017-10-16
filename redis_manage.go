@@ -40,6 +40,9 @@ func handle(w http.ResponseWriter, r *http.Request) {
 		case "connect":
 			connect(w, r)
 			return
+		case "logout":
+			logout(w, r)
+			return
 		case "getkey":
 			getKey(w, r)
 			return
@@ -96,6 +99,11 @@ func connect(w http.ResponseWriter, r *http.Request) {
 	ret["err"] = "0"
 	dats, _ := json.Marshal(ret)
 	io.WriteString(w, string(dats))
+	return
+}
+
+func logout(w http.ResponseWriter, r *http.Request) {
+	redisServer.Host = ""
 	return
 }
 
