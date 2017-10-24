@@ -27,7 +27,7 @@ export default {
       curHost: 0,
       name: '',
       host: '',
-      port: ,
+      port: 6379,
       auth: '',
       msg: '',
       win: 1,

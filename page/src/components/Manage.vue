@@ -165,7 +165,7 @@
         if (resp) {
           this.keys = resp
         } else {
-          $Msg.warning('没有获取到任何KEYS')
+          $Msg.warning('没有获取到任何KEYS，请手动刷新下')
         }
       }).fail((resp) => {
         $Msg.error('获取信息失败：服务器错误')
