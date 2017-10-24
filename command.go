@@ -17,7 +17,6 @@ import(
 func getKeys(k string, client net.Conn) ([]string, error){
     if k == "*" {
         k = getAZ()
-        fmt.Println(k)
     }
 	cmd := fmt.Sprintf("KEYS %s", k)
 	keys, err := exec(cmd, client)
