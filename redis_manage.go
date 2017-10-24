@@ -124,7 +124,7 @@ func cmdHandle(w http.ResponseWriter, r *http.Request) {
 		log.Error("next reader: " + errn.Error())
 		return
 	}
-	bufs := make([]byte, 102400)
+	bufs := make([]byte, 1024000)
 	n, _ := reader.Read(bufs)
 	cmd := string(bufs[:n])
 	fmt.Println(cmd)

@@ -50,11 +50,15 @@
   .clear{
     clear:both;
   }
+  .layout-menu-left{
+    height: 800px;
+    overflow-y: auto;
+  }
 </style>
 <template>
   <div class="manage clear" v-bind:data="mode">
     <Row>
-      <Col span="5">
+      <Col span="5" class="layout-menu-left">
       <Menu active-name="1-2" width="auto" :open-names="['1']">
         <Submenu name="1">
           <template slot="title">

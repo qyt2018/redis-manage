@@ -8,14 +8,23 @@ import(
 	"strconv"
 	"time"
 	"crypto/md5"
+	"strings"
 )
 
 /*
 	keys xxx
 */
 func getKeys(k string, client net.Conn) ([]string, error){
+    if k == "*" {
+        k = getAZ()
+        fmt.Println(k)
+    }
 	cmd := fmt.Sprintf("KEYS %s", k)
-	return exec(cmd, client)
+	keys, err := exec(cmd, client)
+    if err != nil {
+        return keys, err
+    }
+    return filterKeys(keys), err
 }
 
 /*
@@ -281,3 +290,45 @@ func getValue(k string, client net.Conn) ([]string, error){
 	}
 	return data, nil
 }
+
+/*
+  判断是否是二进制
+ */
+func isBinary(key string) bool {
+    for _, char := range []rune(key) {
+        if char == 0 {
+            return true
+        }
+        if char > 126 || (char < 32 && char != 8 && char != 9 && char != 10 && char != 13) {
+            return true
+        }
+    }
+    return false
+}
+
+/*
+ filter keys
+ */
+func filterKeys(keys []string) []string {
+    var ks []string
+    for _, value := range keys {
+        if !isBinary(value) {
+            ks = append(ks, value)
+        }
+    }
+    return ks
+}
+
+/*
+    get a-z
+*/
+func getAZ() string {
+    var p []string
+    for i := 97; i <= 122; i++ {
+        p = append(p, string(i))
+    }
+    str := strings.Join(p, "|")
+    str = fmt.Sprintf("[%s]*", str)
+    return str
+}
+

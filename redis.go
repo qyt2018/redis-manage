@@ -44,7 +44,7 @@ func exec(cmd string, client net.Conn) ([]string, error){
 	if err != nil {
 		return data, err
 	}
-	buf := make([]byte, 10240000)
+	buf := make([]byte, 204800000)
 	n, err = client.Read(buf)
 	if err != nil {
 		return data, err
