@@ -4,7 +4,7 @@
     background: #f5f7f9;
   }
   .layout-logo{
-    width: 100px;
+    width: 130px;
     height: 30px;
     background: #5b6270;
     border-radius: 3px;
@@ -47,11 +47,21 @@
   .height15{
     height:15px;
   }
+  .layout-right {
+    float: right;
+    margin-right:50px;
+  }
+  .layout-right a{
+    color: #eee;
+  }
+  .layout-right a:hover{
+      color: #fff;
+  }
 </style>
 <template>
   <div class="layout">
     <Menu mode="horizontal" theme="dark" active-name="1">
-      <div class="layout-logo"><a href="javascript:void(0);" @click.prevent="logout">退出登录</a></div>
+      <div class="layout-logo">Redis Manage</div>
       <div class="layout-nav">
         <MenuItem @click.native="getMode(1)">
           <Icon type="ios-eye"></Icon>
@@ -61,6 +71,9 @@
           <Icon type="code-working"></Icon>
           命令模式
         </MenuItem>
+      </div>
+      <div class="layout-right">
+         <a href="javascript:void(0);" @click.prevent="logout"><Icon type="power"></Icon> 退出登录</a>
       </div>
     </Menu>
     <div class="layout-breadcrumb">
